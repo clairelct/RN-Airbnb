@@ -9,6 +9,8 @@ import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
+import RoomScreen from "./containers/RoomScreen";
+import { StyleSheet, Image, View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -85,12 +87,22 @@ export default function App() {
                 >
                   {() => (
                     <Stack.Navigator>
+                      {/* PAGE HOME */}
                       <Stack.Screen
                         name="Home"
                         options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "red" },
-                          headerTitleStyle: { color: "white" },
+                          headerStyle: {
+                            backgroundColor: "white",
+                            height: 100,
+                          },
+                          headerTitle: (props) => (
+                            <View style={styles.headerLogo}>
+                              <Image
+                                style={styles.logo}
+                                source={require("./assets/img/logo.png")}
+                              ></Image>
+                            </View>
+                          ),
                         }}
                       >
                         {() => <HomeScreen />}
@@ -103,6 +115,27 @@ export default function App() {
                         }}
                       >
                         {() => <ProfileScreen />}
+                      </Stack.Screen>
+
+                      {/* PAGE RAJOUTÉE : ROOM */}
+                      <Stack.Screen
+                        name="Room"
+                        options={{
+                          headerStyle: {
+                            backgroundColor: "white",
+                            height: 100,
+                          },
+                          headerTitle: (props) => (
+                            <View style={styles.headerLogo}>
+                              <Image
+                                style={styles.logo}
+                                source={require("./assets/img/logo.png")}
+                              ></Image>
+                            </View>
+                          ),
+                        }}
+                      >
+                        {(props) => <RoomScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
@@ -139,3 +172,16 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  headerLogo: {
+    marginTop: 30,
+    width: 40,
+    height: 40,
+  },
+  logo: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+});
