@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigation } from "@react-navigation/core";
+// import { useNavigation } from "@react-navigation/core";
 import {
   StyleSheet,
   ActivityIndicator,
@@ -9,19 +9,18 @@ import {
   Image,
   View,
 } from "react-native";
+import { TouchableOpacity } from "react-native";
 import axios from "axios";
 import { Entypo } from "@expo/vector-icons";
 import colors from "../assets/css/colors";
-import { TouchableOpacity } from "react-native";
 
-export default function HomeScreen() {
-  const navigation = useNavigation();
+export default function HomeScreen({ navigation }) {
+  // const navigation = useNavigation();
 
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   // Requête axios
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +38,7 @@ export default function HomeScreen() {
   }, []);
 
   return isLoading ? (
-    <ActivityIndicator />
+    <ActivityIndicator size="large" color={colors.red} />
   ) : (
     <View style={styles.container}>
       {/* ANNONCES */}

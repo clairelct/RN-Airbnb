@@ -23,7 +23,7 @@ export default function RoomScreen({ navigation, route }) {
         const response = await axios.get(
           `https://express-airbnb-api.herokuapp.com/rooms/${id}`
         );
-        console.log(response.data);
+        //console.log(response.data);
         setData(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -34,7 +34,7 @@ export default function RoomScreen({ navigation, route }) {
   }, []);
 
   return isLoading ? (
-    <ActivityIndicator />
+    <ActivityIndicator size="large" color={colors.red} />
   ) : (
     <View>
       {/* Image */}

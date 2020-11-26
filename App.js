@@ -4,13 +4,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+// Containers
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
-import SettingsScreen from "./containers/SettingsScreen";
+import AroundMeScreen from "./containers/AroundMeScreen";
 import RoomScreen from "./containers/RoomScreen";
-import { StyleSheet, Image, View } from "react-native";
+// Components
+import Logo from "./components/Logo";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -64,124 +66,107 @@ export default function App() {
         </Stack.Navigator>
       ) : (
         // User is signed in
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Tab"
-            options={{ header: () => null, animationEnabled: false }}
+
+        <Tab.Navigator
+          tabBarOptions={{
+            activeTintColor: "tomato",
+            inactiveTintColor: "gray",
+          }}
+        >
+          {/* ONGLET 1: HOME */}
+          <Tab.Screen
+            name="Home"
+            options={{
+              tabBarLabel: "Home",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name={"ios-home"} size={size} color={color} />
+              ),
+            }}
           >
             {() => (
-              <Tab.Navigator
-                tabBarOptions={{
-                  activeTintColor: "tomato",
-                  inactiveTintColor: "gray",
-                }}
-              >
-                <Tab.Screen
+              <Stack.Navigator>
+                {/* Page: HOME */}
+                <Stack.Screen
                   name="Home"
                   options={{
-                    tabBarLabel: "Home",
-                    tabBarIcon: ({ color, size }) => (
-                      <Ionicons name={"ios-home"} size={size} color={color} />
-                    ),
+                    headerStyle: {
+                      backgroundColor: "white",
+                    },
+                    headerTitle: () => <Logo />,
                   }}
                 >
-                  {() => (
-                    <Stack.Navigator>
-                      {/* PAGE HOME */}
-                      <Stack.Screen
-                        name="Home"
-                        options={{
-                          headerStyle: {
-                            backgroundColor: "white",
-                            height: 100,
-                          },
-                          headerTitle: (props) => (
-                            <View style={styles.headerLogo}>
-                              <Image
-                                style={styles.logo}
-                                source={require("./assets/img/logo.png")}
-                              ></Image>
-                            </View>
-                          ),
-                        }}
-                      >
-                        {() => <HomeScreen />}
-                      </Stack.Screen>
+                  {(props) => <HomeScreen {...props} />}
+                </Stack.Screen>
 
-                      <Stack.Screen
-                        name="Profile"
-                        options={{
-                          title: "User Profile",
-                        }}
-                      >
-                        {() => <ProfileScreen />}
-                      </Stack.Screen>
-
-                      {/* PAGE RAJOUTÉE : ROOM */}
-                      <Stack.Screen
-                        name="Room"
-                        options={{
-                          headerStyle: {
-                            backgroundColor: "white",
-                            height: 100,
-                          },
-                          headerTitle: (props) => (
-                            <View style={styles.headerLogo}>
-                              <Image
-                                style={styles.logo}
-                                source={require("./assets/img/logo.png")}
-                              ></Image>
-                            </View>
-                          ),
-                        }}
-                      >
-                        {(props) => <RoomScreen {...props} />}
-                      </Stack.Screen>
-                    </Stack.Navigator>
-                  )}
-                </Tab.Screen>
-                <Tab.Screen
-                  name="Settings"
+                {/* Page: ROOM */}
+                <Stack.Screen
+                  name="Room"
                   options={{
-                    tabBarLabel: "Settings",
-                    tabBarIcon: ({ color, size }) => (
-                      <Ionicons
-                        name={"ios-options"}
-                        size={size}
-                        color={color}
-                      />
-                    ),
+                    headerStyle: {
+                      backgroundColor: "white",
+                    },
+                    headerTitle: () => <Logo />,
                   }}
                 >
-                  {() => (
-                    <Stack.Navigator>
-                      <Stack.Screen
-                        name="Settings"
-                        options={{ title: "Settings", tabBarLabel: "Settings" }}
-                      >
-                        {() => <SettingsScreen setToken={setToken} />}
-                      </Stack.Screen>
-                    </Stack.Navigator>
-                  )}
-                </Tab.Screen>
-              </Tab.Navigator>
+                  {(props) => <RoomScreen {...props} />}
+                </Stack.Screen>
+              </Stack.Navigator>
             )}
-          </Stack.Screen>
-        </Stack.Navigator>
+          </Tab.Screen>
+          {/* ONGLET 2: AROUND ME */}
+          <Tab.Screen
+            name="Map"
+            options={{
+              tabBarLabel: "Around me",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name={"ios-options"} size={size} color={color} />
+              ),
+            }}
+          >
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Map"
+                  options={{
+                    headerStyle: {
+                      backgroundColor: "white",
+                    },
+                    headerTitle: () => <Logo />,
+                  }}
+                >
+                  {() => <AroundMeScreen />}
+                </Stack.Screen>
+              </Stack.Navigator>
+            )}
+          </Tab.Screen>
+          {/* ONGLET 3: MY PROFILE */}
+          <Tab.Screen
+            name="Profile"
+            options={{
+              tabBarLabel: "My profile",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name={"ios-options"} size={size} color={color} />
+              ),
+            }}
+          >
+            {() => (
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Profile"
+                  options={{
+                    headerStyle: {
+                      backgroundColor: "white",
+                    },
+                    headerTitle: () => <Logo />,
+                  }}
+                >
+                  {() => <ProfileScreen setToken={setToken} />}
+                </Stack.Screen>
+              </Stack.Navigator>
+            )}
+          </Tab.Screen>
+        </Tab.Navigator>
       )}
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  headerLogo: {
-    marginTop: 30,
-    width: 40,
-    height: 40,
-  },
-  logo: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "contain",
-  },
-});
