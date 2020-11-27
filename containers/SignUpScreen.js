@@ -17,7 +17,7 @@ const height = Dimensions.get("window").height;
 console.log(width);
 console.log(height);
 
-export default function SignUpScreen({ navigation, setToken }) {
+export default function SignUpScreen({ navigation, setToken, setUser }) {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
@@ -51,12 +51,13 @@ export default function SignUpScreen({ navigation, setToken }) {
             }
           );
 
-          console.log(response.data);
-          if (response.data.token) {
+          console.log("SIGN UP", response.data);
+          if (response.data.token && response.data._id) {
             alert("TOUT EST OK");
             // Stocker Token
-            const userToken = response.data.token;
-            setToken(userToken);
+            setToken(response.data.token);
+            // Stocker User Id
+            setUser(response.data._id);
           } else {
             alert("An error occurred");
           }

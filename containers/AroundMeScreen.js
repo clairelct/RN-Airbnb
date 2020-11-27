@@ -5,9 +5,8 @@ import axios from "axios";
 import * as Location from "expo-location";
 import colors from "../assets/css/colors";
 
-const AroundMeScreen = () => {
+const AroundMeScreen = ({ navigation }) => {
   const [errorMap, setErrorMap] = useState();
-  // const [coords, setCoords] = useState(); // Coordonnées utilisateur
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [data, setData] = useState([]);
@@ -17,62 +16,58 @@ const AroundMeScreen = () => {
   useEffect(() => {
     const askPermission = async () => {
       try {
-        const response = await Location.requestPermissionsAsync();
-        //console.log(response);
-        if (response.status === "granted") {
-          let location = await Location.getCurrentPositionAsync({});
-          //console.log(location);
-          // const obj = {
-          //   latitude: location.coords.latitude,
-          //   longitude: location.coords.longitude,
-          // };
-          // setCoords(obj);
-          setLatitude(location.coords.latitude);
-          setLongitude(location.coords.longitude);
+        const responseLoc = await Location.requestPermissionsAsync();
+        //console.log(responseLoc);
+
+        let response;
+
+        if (responseLoc.status === "granted") {
+          // Récupérer les données
+          const location = await Location.getCurrentPositionAsync({});
+          const latitude = location.coords.latitude;
+          const longitude = location.coords.longitude;
+          // Définir dans des states également sinon pas accessibles
+          setLatitude(latitude);
+          setLongitude(longitude);
+
+          // Envoyer requête complète avec les queries lat,long.
+          response = await axios.get(
+            `https://express-airbnb-api.herokuapp.com/rooms/around?latitude=${latitude}&longitude=${longitude}`
+          );
         } else {
-          setError(true);
+          // Envoyer requête simple
+          response = await axios.get(
+            "https://express-airbnb-api.herokuapp.com/rooms/around"
+          );
         }
-        //setIsLoading(false);
+        setData(response.data);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setError(true);
       }
     };
     askPermission();
   }, []);
 
-  // Requête Axios
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://express-airbnb-api.herokuapp.com/rooms/around?latitude=${latitude}&longitude=${longitude}`
-        );
-        console.log("ROOMS AROUND", response.data);
-        setData(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [latitude, longitude]);
-
   return isLoading ? (
-    <ActivityIndicator size="large" color={colors.red} />
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" color={colors.red} />
+    </View>
   ) : (
     <>
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: latitude, // Center sur loc. de l'utilisateur
-          longitude: longitude, // Center sur loc. de l'utilisateur
+          latitude: latitude, // Centrer sur loc. de l'utilisateur
+          longitude: longitude, // Centrer sur loc. de l'utilisateur
           latitudeDelta: 0.1,
           longitudeDelta: 0.1,
         }}
         showsUserLocation={true}
       >
         {data &&
-          data.map((room, index) => {
+          data.map((room) => {
             return (
               <MapView.Marker
                 key={room._id}
@@ -82,6 +77,9 @@ const AroundMeScreen = () => {
                 }}
                 title={room.title}
                 description={room.description}
+                onPress={() => {
+                  navigation.navigate("Room", { id: room._id });
+                }}
               />
             );
           })}

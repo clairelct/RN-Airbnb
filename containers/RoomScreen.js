@@ -29,7 +29,9 @@ export default function RoomScreen({ navigation, route }) {
   }, []);
 
   return isLoading ? (
-    <ActivityIndicator size="large" color={colors.red} />
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" color={colors.red} />
+    </View>
   ) : (
     <View style={styles.container}>
       <View>

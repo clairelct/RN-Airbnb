@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 // Containers
 import HomeScreen from "./containers/HomeScreen";
 import ProfileScreen from "./containers/ProfileScreen";
@@ -20,15 +20,29 @@ const Stack = createStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  console.log("App userToken:", userToken);
+  console.log("App userId:", userId);
 
   const setToken = async (token) => {
     if (token) {
-      AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem("userToken", token);
     } else {
-      AsyncStorage.removeItem("userToken");
+      await AsyncStorage.removeItem("userToken");
     }
 
     setUserToken(token);
+  };
+
+  const setUser = async (id) => {
+    if (id) {
+      await AsyncStorage.setItem("userId", id);
+    } else {
+      await AsyncStorage.removeItem("userId");
+    }
+
+    setUserId(id);
   };
 
   useEffect(() => {
@@ -36,10 +50,11 @@ export default function App() {
     const bootstrapAsync = async () => {
       // We should also handle error for production apps
       const userToken = await AsyncStorage.getItem("userToken");
-
+      const userId = await AsyncStorage.getItem("userId");
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
       setIsLoading(false);
+      setUserId(userId);
       setUserToken(userToken);
     };
 
@@ -55,13 +70,17 @@ export default function App() {
             name="SignUp"
             options={{ header: () => null, animationEnabled: false }}
           >
-            {(props) => <SignUpScreen {...props} setToken={setToken} />}
+            {(props) => (
+              <SignUpScreen {...props} setToken={setToken} setUser={setUser} />
+            )}
           </Stack.Screen>
           <Stack.Screen
             name="SignIn"
             options={{ header: () => null, animationEnabled: false }}
           >
-            {(props) => <SignInScreen {...props} setToken={setToken} />}
+            {(props) => (
+              <SignInScreen {...props} setToken={setToken} setUser={setUser} />
+            )}
           </Stack.Screen>
         </Stack.Navigator>
       ) : (
@@ -119,7 +138,7 @@ export default function App() {
             options={{
               tabBarLabel: "Around me",
               tabBarIcon: ({ color, size }) => (
-                <Ionicons name={"ios-options"} size={size} color={color} />
+                <FontAwesome name="map-marker" size={24} color={color} />
               ),
             }}
           >
@@ -134,7 +153,7 @@ export default function App() {
                     headerTitle: () => <Logo />,
                   }}
                 >
-                  {() => <AroundMeScreen />}
+                  {(props) => <AroundMeScreen {...props} />}
                 </Stack.Screen>
               </Stack.Navigator>
             )}
@@ -160,7 +179,15 @@ export default function App() {
                     headerTitle: () => <Logo />,
                   }}
                 >
-                  {() => <ProfileScreen setToken={setToken} />}
+                  {(props) => (
+                    <ProfileScreen
+                      {...props}
+                      userToken={userToken}
+                      setToken={setToken}
+                      userId={userId}
+                      setUser={setUser}
+                    />
+                  )}
                 </Stack.Screen>
               </Stack.Navigator>
             )}

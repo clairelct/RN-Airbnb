@@ -13,7 +13,7 @@ import {
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 
-export default function SignInScreen({ navigation, setToken }) {
+export default function SignInScreen({ navigation, setToken, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
@@ -27,11 +27,12 @@ export default function SignInScreen({ navigation, setToken }) {
           { email, password },
           { headers: { "Content-Type": "application/json" } }
         );
-        console.log("RESPONSE", response.data);
-        if (response.data.token) {
-          // Stocker Token
-          const userToken = response.data.token;
-          setToken(userToken);
+        console.log("SIGN IN", response.data);
+        if (response.data.token && response.data.id) {
+          // Envoyer token à la fonction qui gère le cookie
+          setToken(response.data.token);
+          // Stocker User Id
+          setUser(response.data.id);
         } else {
           alert("An error occurred");
         }
