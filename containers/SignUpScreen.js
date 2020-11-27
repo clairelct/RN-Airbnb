@@ -51,7 +51,7 @@ export default function SignUpScreen({ navigation, setToken, setUser }) {
             }
           );
 
-          console.log("SIGN UP", response.data);
+          //console.log("SIGN UP", response.data);
           if (response.data.token && response.data._id) {
             alert("TOUT EST OK");
             // Stocker Token

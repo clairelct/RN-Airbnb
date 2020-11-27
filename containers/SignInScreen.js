@@ -27,7 +27,7 @@ export default function SignInScreen({ navigation, setToken, setUser }) {
           { email, password },
           { headers: { "Content-Type": "application/json" } }
         );
-        console.log("SIGN IN", response.data);
+        //console.log("SIGN IN", response.data);
         if (response.data.token && response.data.id) {
           // Envoyer token à la fonction qui gère le cookie
           setToken(response.data.token);

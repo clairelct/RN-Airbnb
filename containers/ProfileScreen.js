@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { useRoute } from "@react-navigation/core";
-import { FontAwesome5 } from "@expo/vector-icons";
 import {
   StyleSheet,
   TextInput,
   Text,
+  Image,
   View,
   Button,
+  TouchableHighlight,
   ActivityIndicator,
 } from "react-native";
 import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
+// import { useRoute } from "@react-navigation/core";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import colors from "../assets/css/colors";
 
 export default function ProfileScreen({
@@ -20,6 +22,9 @@ export default function ProfileScreen({
   setUser,
 }) {
   // const { params } = useRoute();
+  const [picture, setPicture] = useState();
+  const [photo, setPhoto] = useState();
+  const [userData, setUserData] = useState({});
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [description, setDescription] = useState("");
@@ -40,9 +45,8 @@ export default function ProfileScreen({
             },
           }
         );
-        console.log("YES: ", response.data);
-        //setData(response.data);
-
+        //console.log("PROFILE DATA: ", response.data);
+        setUserData(response.data);
         // Pré-remplir les champs :
         setEmail(response.data.email);
         setUsername(response.data.username);
@@ -56,6 +60,28 @@ export default function ProfileScreen({
     fetchData();
   }, []);
 
+  // Fonction pour demander permission et upload photo gallery
+  const getPermissionAndCamRollAccess = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status === "granted") {
+        const result = await ImagePicker.launchImageLibraryAsync();
+        //console.log({ result }); // Infos photo (uri, type, height, et cancelled:false)
+
+        if (result.cancelled === false) {
+          // Enregistrer l'uri de l'image
+          setPicture(result.uri);
+        } else {
+          alert("Upload annulé");
+        }
+      } else {
+        alert("Permission refusée");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Modifier les données de l'utilisateur
   useEffect(() => {}, []);
 
@@ -67,13 +93,37 @@ export default function ProfileScreen({
     <View style={styles.container}>
       {/* PHOTO */}
       <View style={styles.photoContainer}>
-        <View style={styles.btnUploadPic}></View>
+        <TouchableHighlight
+          style={styles.btnUploadPic}
+          onPress={getPermissionAndCamRollAccess}
+        >
+          <MaterialIcons name="photo-library" size={28} color="black" />
+        </TouchableHighlight>
+
         <View style={styles.photo}>
-          <FontAwesome5 name="user" size={24} color="black" />
+          {/* Si l'utilisateur n'a pas de photo */}
+          {console.log(picture)}
+          {!userData.photo && !picture ? (
+            <FontAwesome5 name="user" size={50} color={colors.lightgrey} />
+          ) : (
+            <Image
+              source={{ uri: picture }}
+              style={styles.displayUserPic}
+            ></Image>
+          )}
+
+          {/* Si l'utilisateur a chargé une photo depuis la galerie */}
         </View>
-        <View style={styles.btnTakePic}></View>
+
+        <TouchableHighlight
+          style={styles.btnUploadPic}
+          style={styles.btnTakePic}
+        >
+          <MaterialIcons name="photo-camera" size={28} color="black" />
+        </TouchableHighlight>
       </View>
       {/* FORM */}
+
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
@@ -131,10 +181,12 @@ export default function ProfileScreen({
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    marginLeft: 30,
-    marginRight: 30,
-    marginBottom: 20,
+    paddingTop: 20,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 20,
+    backgroundColor: colors.lightgrey,
+    flex: 1,
   },
   photoContainer: {
     flexDirection: "row",
@@ -142,12 +194,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   photo: {
-    backgroundColor: "grey",
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
     width: 130,
     height: 130,
     marginLeft: 15,
     marginRight: 15,
     borderRadius: 65,
+    shadowOffset: { width: 0, height: 2 },
+    shadowColor: "grey",
+    shadowOpacity: 1.0,
+  },
+  displayUserPic: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   btnUploadPic: {
     backgroundColor: "pink",
@@ -155,7 +218,7 @@ const styles = StyleSheet.create({
     height: 30,
   },
   btnTakePic: {
-    backgroundColor: "blue",
+    backgroundColor: "lightblue",
     width: 30,
     height: 30,
   },
