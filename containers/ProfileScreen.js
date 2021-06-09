@@ -82,6 +82,21 @@ export default function ProfileScreen({
     }
   };
 
+  // Fonction pour demander permission et prendre photo camero
+  const getPermissionAndCameraAccess = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status === "granted") {
+        const result = await ImagePicker.launchCameraAsync();
+        console.log(result);
+      } else {
+        alert("Camera unauthorized");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Modifier les données de l'utilisateur
   useEffect(() => {}, []);
 
@@ -101,8 +116,8 @@ export default function ProfileScreen({
         </TouchableHighlight>
 
         <View style={styles.photo}>
-          {/* Si l'utilisateur n'a pas de photo */}
-          {console.log(picture)}
+          {console.log(photo)}
+          {/* Si l'utilisateur n'a pas de photo... */}
           {!userData.photo && !picture ? (
             <FontAwesome5 name="user" size={50} color={colors.lightgrey} />
           ) : (
@@ -111,13 +126,11 @@ export default function ProfileScreen({
               style={styles.displayUserPic}
             ></Image>
           )}
-
-          {/* Si l'utilisateur a chargé une photo depuis la galerie */}
         </View>
 
         <TouchableHighlight
-          style={styles.btnUploadPic}
           style={styles.btnTakePic}
+          onPress={getPermissionAndCameraAccess}
         >
           <MaterialIcons name="photo-camera" size={28} color="black" />
         </TouchableHighlight>
