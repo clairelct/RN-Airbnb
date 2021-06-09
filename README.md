@@ -1,6 +1,21 @@
 # Airbnb Clone - React Native
 
-![Airbnb Clone cover](http://image.noelshack.com/fichiers/2021/23/3/1623224867-airbnb-cover.png)
+<img
+		width="210"
+		alt="Capture 1"
+		src="http://image.noelshack.com/fichiers/2021/23/3/1623243365-capture-airbnb-1.png">
+<img
+		width="210"
+		alt="Capture 2"
+		src="http://image.noelshack.com/fichiers/2021/23/3/1623243365-capture-airbnb-2.png">
+<img
+		width="210"
+		alt="Capture 3"
+		src="http://image.noelshack.com/fichiers/2021/23/3/1623243365-capture-airbnb-4.png">
+<img
+		width="210"
+		alt="Capture 4"
+		src="http://image.noelshack.com/fichiers/2021/23/3/1623243365-capture-airbnb-3.png">
 
 ## Overview
 
