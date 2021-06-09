@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-//import { useNavigation } from "@react-navigation/core";
 import colors from "../assets/css/colors";
 import {
   Text,
@@ -20,24 +19,21 @@ export default function SignInScreen({ navigation, setToken, setUser }) {
 
   const handleSubmit = async () => {
     if (email && password) {
-      // Requête Axios
+      // Axios request
       try {
         const response = await axios.post(
           "https://express-airbnb-api.herokuapp.com/user/log_in",
           { email, password },
           { headers: { "Content-Type": "application/json" } }
         );
-        //console.log("SIGN IN", response.data);
+
         if (response.data.token && response.data.id) {
-          // Envoyer token à la fonction qui gère le cookie
           setToken(response.data.token);
-          // Stocker User Id
           setUser(response.data.id);
         } else {
           alert("An error occurred");
         }
       } catch (error) {
-        //console.log("ERROR", error.message);
         setErrorMessage(error.response.data.error);
       }
     } else {
@@ -71,7 +67,7 @@ export default function SignInScreen({ navigation, setToken, setUser }) {
             style={styles.input}
             placeholder="Password"
             placeholderTextColor={colors.paleRed}
-            // secureTextEntry={true}
+            secureTextEntry={true}
             onChangeText={(text) => {
               setPassword(text);
             }}
@@ -103,10 +99,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.red,
     flex: 1,
   },
-  scrollView: {
-    // flex: 1,
-    //backgroundColor: colors.red,
-  },
   formContainer: {
     marginLeft: 30,
     marginRight: 30,
@@ -129,7 +121,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    paddingLeft: 10,
     color: colors.white,
     height: 40,
     marginBottom: 10,
