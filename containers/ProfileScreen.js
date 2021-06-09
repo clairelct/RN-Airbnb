@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   View,
-  Button,
   TouchableHighlight,
   ActivityIndicator,
 } from "react-native";
@@ -112,7 +111,7 @@ export default function ProfileScreen({
           style={styles.btnUploadPic}
           onPress={getPermissionAndCamRollAccess}
         >
-          <MaterialIcons name="photo-library" size={28} color="black" />
+          <MaterialIcons name="photo-library" size={34} color="black" />
         </TouchableHighlight>
 
         <View style={styles.photo}>
@@ -132,21 +131,13 @@ export default function ProfileScreen({
           style={styles.btnTakePic}
           onPress={getPermissionAndCameraAccess}
         >
-          <MaterialIcons name="photo-camera" size={28} color="black" />
+          <MaterialIcons name="photo-camera" size={34} color="black" />
         </TouchableHighlight>
       </View>
       {/* FORM */}
 
       <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          placeholderTextColor={colors.paleRed}
-          onChangeText={(text) => {
-            setEmail(text);
-          }}
-          value={email}
-        />
+        <Text style={styles.label}>Username</Text>
         <TextInput
           style={styles.input}
           placeholder="Username"
@@ -156,6 +147,19 @@ export default function ProfileScreen({
           }}
           value={username}
         />
+
+        <Text style={styles.label}>Email</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor={colors.paleRed}
+          onChangeText={(text) => {
+            setEmail(text);
+          }}
+          value={email}
+        />
+
+        <Text style={styles.label}>Description</Text>
         <TextInput
           style={styles.largeTextInput}
           placeholder="Description"
@@ -168,25 +172,27 @@ export default function ProfileScreen({
             setDescription(text);
           }}
         ></TextInput>
-        <Text>
-          {username} {email} {description}
-        </Text>
       </View>
       {/* BUTTONS */}
-      <View style={styles.buttonsContainer}>
-        <Button
-          title="Update"
+      <View style={styles.buttonArea}>
+        <TouchableHighlight
+          style={styles.buttonDark}
           onPress={() => {
             alert("Update!");
           }}
-        />
-        <Button
-          title="Log Out"
+        >
+          <Text style={styles.buttonDarkText}>Update</Text>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          style={styles.button}
           onPress={() => {
             setToken(null);
             setUser(null);
           }}
-        />
+        >
+          <Text style={styles.buttonText}>Log Out</Text>
+        </TouchableHighlight>
       </View>
     </View>
   );
@@ -202,6 +208,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   photoContainer: {
+    marginTop: 25,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -226,35 +233,73 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   btnUploadPic: {
-    backgroundColor: "pink",
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
   },
   btnTakePic: {
-    backgroundColor: "lightblue",
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
   },
   formContainer: {
     marginTop: 30,
     marginBottom: 30,
+    alignItems: "center",
   },
   input: {
     color: "black",
+    fontWeight: "bold",
+    fontSize: 16,
     paddingLeft: 10,
     height: 40,
-    marginBottom: 10,
-    borderBottomColor: colors.red,
-    borderBottomWidth: 1,
+    marginBottom: 20,
+  },
+  label: {
+    color: "#666666",
   },
   largeTextInput: {
+    marginTop: 10,
     color: "black",
+    fontWeight: "bold",
+    fontSize: 16,
     height: 80,
     padding: 10,
-    borderColor: colors.red,
-    borderWidth: 1,
+    width: 300,
+    textAlign: "center",
   },
-  buttonsContainer: {
-    backgroundColor: "lightgrey",
+  buttonArea: {
+    alignItems: "center",
+  },
+  button: {
+    marginTop: 10,
+    marginBottom: 10,
+    width: "55%",
+    height: 55,
+    borderRadius: 50,
+    borderColor: colors.red,
+    borderWidth: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: colors.red,
+    fontWeight: "bold",
+    fontSize: 20,
+    lineHeight: 20,
+  },
+  buttonDark: {
+    marginTop: 10,
+    marginBottom: 10,
+    width: "55%",
+    height: 55,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.red,
+  },
+  buttonDarkText: {
+    color: colors.white,
+    fontWeight: "bold",
+    fontSize: 20,
+    lineHeight: 20,
   },
 });

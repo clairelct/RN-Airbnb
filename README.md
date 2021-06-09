@@ -16,6 +16,10 @@
 		width="210"
 		alt="Capture 4"
 		src="http://image.noelshack.com/fichiers/2021/23/3/1623243365-capture-airbnb-3.png">
+<img
+		width="210"
+		alt="Capture 5"
+		src="http://image.noelshack.com/fichiers/2021/23/3/1623245846-capture-airbnb-5.png">
 
 ## Overview
 
@@ -32,7 +36,7 @@ Airbnb clone made with React-Native, NodeJS and Express. All rights reserved to 
 
 ## Architecture
 
-7 screens availables : Sign up, Sign in, Home, Profile, Around me, Room, Settings.
+7 screens availables : Sign up, Sign in, Home, Around me, Room, and Profile.
 
 ## Running the project
 
